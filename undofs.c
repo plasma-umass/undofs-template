@@ -10,10 +10,11 @@
 
 static int do_getattr( const char *path, struct stat *st )
 {
-	st->st_uid = getuid(); // The owner of the file/directory is the user who mounted the filesystem
-	st->st_gid = getgid(); // The group of the file/directory is the same as the group of the user who mounted the filesystem
-	st->st_atime = time( NULL ); // The last "a"ccess of the file/directory is right now
-	st->st_mtime = time( NULL ); // The last "m"odification of the file/directory is right now
+	//Set a few attributes of the path
+	st->st_uid = getuid();
+	st->st_gid = getgid(); 
+	st->st_atime = time( NULL );
+	st->st_mtime = time( NULL );
 	
 	if ( strcmp( path, "/" ) == 0 )
 	{
