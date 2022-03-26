@@ -17,7 +17,9 @@ apt install libfuse-dev
 Compile the code using `make` and then execute `./undofs <mount-point>`. 
 For example, to mount the filesystem at `/mnt/undofs`:
 
-```mkdir /mnt/undofs ; ./undofs /mnt/undofs```
+```mkdir /mnt/undofs ; ./undofs -f /mnt/undofs```
+
+To print debug messages using printf use `-f`
 
 You can now view the files and directories by:
 

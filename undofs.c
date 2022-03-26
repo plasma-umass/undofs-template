@@ -8,6 +8,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+static const char* underlying_dir_path = "./undofs-filedata/";
+
 static int do_getattr( const char *path, struct stat *st )
 {
 	//Set a few attributes of the path
@@ -42,19 +44,19 @@ static int do_readdir( const char *path, void *buffer, fuse_fill_dir_t filler, o
 	return 0;
 }
 
-static int do_read( const char *path, char *buffer, size_t size, off_t offset, struct fuse_file_info *fi )
+static int do_read(const char *path, char *buffer, size_t size, off_t offset, struct fuse_file_info *fi)
 {
-	char file1Text[] = "file1: Hello World!!";
-	char* selectedText;
-
-	if (strcmp(path, "/file1" ) == 0 )
-		selectedText = file1Text;
-	else
-		return -1;
-	
-	memcpy(buffer, selectedText + offset, size);
+	char underlying_path[256];
+	strcpy(underlying_path, underlying_dir_path);
+	strcat(underlying_path, "file1"); //Assuming path is <undofs-mount-point>/file1.
+	printf("underlying_path %s\n", underlying_path);
+	//Read file1 from underlying file system
+	int fd = open(underlying_path, O_RDONLY);
+	//Assume offset is zero
+	int ret = read(fd, buffer, size);
+	close(fd);
 		
-	return strlen(selectedText) - offset;
+	return ret;
 }
 
 static struct fuse_operations operations = {
