@@ -8,17 +8,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-static const char* underlying_dir_path = "./undofs-filedata/";
+static const char* underlying_dir_path = "~/undofs/undofs-filedata/";
 
-static int do_getattr( const char *path, struct stat *st )
+static int do_getattr(const char *path, struct stat *st, struct fuse_file_info *fi)
 {
 	//Set a few attributes of the path
 	st->st_uid = getuid();
 	st->st_gid = getgid(); 
-	st->st_atime = time( NULL );
-	st->st_mtime = time( NULL );
+	st->st_atime = time(NULL);
+	st->st_mtime = time(NULL);
 	
-	if ( strcmp( path, "/" ) == 0 )
+	if (strcmp(path, "/") == 0)
 	{
 		st->st_mode = S_IFDIR | 0755;
 	}
@@ -31,14 +31,14 @@ static int do_getattr( const char *path, struct stat *st )
 	return 0;
 }
 
-static int do_readdir( const char *path, void *buffer, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi )
+static int do_readdir(const char *path, void *buffer, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi, enum fuse_readdir_flags flags)
 {	
-	filler(buffer, ".", NULL, 0); // Current Directory
-	filler(buffer, "..", NULL, 0); // Parent Directory
+	filler(buffer, ".", NULL, 0, 0); // Current Directory
+	filler(buffer, "..", NULL, 0, 0); // Parent Directory
 	
-	if (strcmp(path, "/" ) == 0) //Root of the filesystem
+	if (strcmp(path, "/") == 0) //Root of the filesystem
 	{
-		filler(buffer, "file1", NULL, 0);
+		filler(buffer, "file1", NULL, 0, 0);
 	}
 	
 	return 0;
